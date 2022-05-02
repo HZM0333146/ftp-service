@@ -1,5 +1,6 @@
 package idv.hzm.simpleftp.server;
 
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -71,7 +73,7 @@ public class FtpClientHandler implements Runnable {
 			if (fileMolde.getType() == 0) {
 				Files.createDirectory(path);
 			} else {
-				Charset ch = Charset.defaultCharset();
+				Charset ch = StandardCharsets.ISO_8859_1;
 				Path filePath = Files.createFile(path).toAbsolutePath();
 				Files.write(filePath, fileMolde.getContent(), ch, StandardOpenOption.CREATE,
 						StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
@@ -96,7 +98,7 @@ public class FtpClientHandler implements Runnable {
 
 	private void saveFile(String saveFilePath, Socket socket) throws IOException {
 		InputStream is = socket.getInputStream();
-		FileOutputStream fos = new FileOutputStream(saveFilePath);
+		BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(saveFilePath));
 		byte[] buffer = new byte[1024];
 		int len;
 		while ((len = is.read(buffer)) != -1) {
